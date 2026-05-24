@@ -39,6 +39,8 @@ class DiscordRegisterService:
             "x-captcha-session-id": ctx.captcha_session_id
         })
         
+        
+        
         y, m, d = ctx.birthday
 
         payload = {
@@ -60,22 +62,24 @@ class DiscordRegisterService:
         data = response.json()
         token = data.get("token", None)
         
-        if token:
-            ctx.token = token
-            self.session.headers.update({"authorization": token})
-            token_status = DiscordUtils.check_discord_token(session=self.session).get("status", "Invalid")
-            if token_status == "Valid":
-                self.stats.mark_valid()
-                self.logger.log_token(f"Succsefully Created Account -> {NexusColor.GREEN} ", token)
-                return
-            
-            if token_status == "invalid":
-                self.stats.mark_invalid()
-                
-            if token_status == "locked":
-                self.stats.mark_locked()
-            
-                
-            TokenStorage().save(ctx=ctx, file=f"{token_status}.txt")
-            raise RuntimeError(f"{token_status} Token")
+        if not token:
+            raise RuntimeError(f"No token in register response: {data}")
+
+        ctx.token = token
+        self.session.headers.update({"authorization": token})
+        token_status = DiscordUtils.check_discord_token(session=self.session).get("status", "Invalid")
+        if token_status == "Valid":
+            self.stats.mark_valid()
+            self.logger.log_token(f"Succsefully Created Account -> {NexusColor.GREEN} ", token)
+            self.session.headers = {k: v for k, v in self.session.headers.items() if k not in ("x-captcha-key", "x-captcha-rqtoken", "x-captcha-session-id", "x-fingerprint")}
+            return
         
+        if token_status == "invalid":
+            self.stats.mark_invalid()
+            
+        if token_status == "locked":
+            self.stats.mark_locked()
+        
+            
+        TokenStorage().save(ctx=ctx, file=f"{token_status}.txt")
+        raise RuntimeError(f"{token_status} Token")

@@ -3,57 +3,100 @@ import requests
 
 from Core.NexusColors.color import NexusColor
 
+
 class Solver:
-    
     def __init__(self, logger, config):
         self.logger = logger
         self.config = config
-        
-    def start_solve(self, rqdata: str, proxy: str) -> str:
-        params = {
-            "url": "https://discord.com/register",
-            "sitekey": "a9b5fb07-92ff-493f-86fe-352a2803b3df",
-            "rqdata": rqdata,
-            "proxy": proxy,
+
+        self.api_base = "https://api.anysolver.com"
+        self.api_key = self.config["solver"]["api_key"]
+
+    def start_solve(self, rqdata: str, proxy: str = None) -> str:
+        payload = {
+            "clientKey": self.api_key,
+            "task": {
+                "type": "PopularCaptchaEnterpriseToken",
+                "websiteURL": "https://discord.com/register",
+                "websiteKey": "a9b5fb07-92ff-493f-86fe-352a2803b3df",
+                "proxy": proxy,
+                "rqdata": rqdata
+            },
+            "provider": self.config["solver"]["subservice"],
         }
 
-        r = requests.get(
-            "http://127.0.0.1:5001/solve",
-            params=params,
-            timeout=10,
+        r = requests.post(
+            f"{self.api_base}/createTask",
+            json=payload,
+            headers={
+                "Content-Type": "application/json"
+            },
+            timeout=30
         )
-        r.raise_for_status()
-        return r.json()["taskid"]
 
-    def wait_for_result(self, taskid: str, timeout: int = 100):
-        if self.config["captcha_timeout"]:
-            timeout = self.config["captcha_timeout"]
-            
+        data = r.json()
+
+        if data.get("errorId") != 0:
+            raise RuntimeError(
+                f"{data.get('errorCode')}: "
+                f"{data.get('errorDescription')}"
+            )
+
+        return data["taskId"]
+
+    def wait_for_result(self, task_id: str, timeout: int = 120):
+        if isinstance(self.config, dict):
+            timeout = self.config.get("captcha_timeout", timeout)
+
         start = time.time()
 
+        time.sleep(4)
+
         while True:
-            r = requests.get(
-                f"http://127.0.0.1:5001/task/{taskid}",
-                timeout=10,
+            r = requests.post(
+                f"{self.api_base}/getTaskResult",
+                json={
+                    "clientKey": self.api_key,
+                    "taskId": task_id
+                },
+                headers={
+                    "Content-Type": "application/json"
+                },
+                timeout=30
             )
-            r.raise_for_status()
+
             data = r.json()
 
             status = data.get("status")
 
-            if status == "success":
+            if status == "ready":
                 elapsed = time.time() - start
-                uuid_str = data["uuid"][:64]
-                self.logger.log(f"Captcha Solved in {NexusColor.PURPLE}{elapsed:.1f}s {NexusColor.LIGHTBLACK}({NexusColor.PURPLE}{uuid_str}{NexusColor.LIGHTBLACK})")
+
+                token = data["solution"]["token"]
+
+                display_token = token[:32] + "..."
+
+                self.logger.log(
+                    f"Captcha Solved in "
+                    f"{NexusColor.PURPLE}{elapsed:.1f}s "
+                    f"{NexusColor.LIGHTBLACK}("
+                    f"{NexusColor.PURPLE}{display_token}"
+                    f"{NexusColor.LIGHTBLACK})"
+                )
+
                 return data
-            
-            if status == "error":
-                raise RuntimeError("Captcha solve failed")
+
+            if status == "failed":
+                raise RuntimeError(
+                    f"Captcha solve failed: "
+                    f"{data.get('errorCode')} - "
+                    f"{data.get('errorDescription')}"
+                )
 
             if time.time() - start > timeout:
-                 raise TimeoutError("Captcha solve timed out")
+                raise TimeoutError("Captcha solve timed out")
 
-            time.sleep(1)
+            time.sleep(3)
 
     def solve(self, ctx):
         if not hasattr(ctx, "captcha_rqdata"):
@@ -61,11 +104,14 @@ class Solver:
 
         self.logger.log("Solving Captcha...")
 
+        proxy = getattr(ctx, "proxy", None)
+
         task_id = self.start_solve(
             rqdata=ctx.captcha_rqdata,
-            proxy=ctx.proxy,
+            proxy=proxy
         )
 
         result = self.wait_for_result(task_id)
+
         if result:
-            ctx.captcha_key = result["uuid"]
+            ctx.captcha_key = result["solution"]["token"]

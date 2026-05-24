@@ -17,7 +17,7 @@ class DiscordUtils:
             "accept-encoding": "gzip, deflate, br",
             "accept-language": "en-US,en;q=0.9",
             "cookie": f"__dcfduid={dcfduid}; __sdcfduid={sdcfduid};",
-            "sec-ch-ua": '".Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103"',
+            "sec-ch-ua": '"Google Chrome";v="143", "Chromium";v="143", "Not/A)Brand";v="99"',
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": '"Windows"',
             "sec-fetch-dest": "document",
@@ -34,6 +34,7 @@ class DiscordUtils:
         fingerprint = fingerprint['fingerprint']
         return fingerprint
 
+    @staticmethod
     def fetch_cookies(session):
         data = session.get('https://discord.com')
         cookiess = session.cookies.get_dict()

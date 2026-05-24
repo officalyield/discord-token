@@ -2,8 +2,9 @@
     "threads": 1,
     "captcha_timeout": 100,
     "solver": {
-        "ai_service": "openrouter",
-        "ai_api_key": ""
+        "service": "anysolver",
+        "subservice": "Capless",
+        "api_key": ""
     },
     "verification": {
         "mail_provider": "cybertemp",

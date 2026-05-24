@@ -84,6 +84,8 @@ class Humaniser:
         DiscordUtils.get_session_id(self.session.headers["authorization"])
         
         try:
+            self.session.headers.update({"referer": "https://discord.com/channels/@me"})
+            
             if self.config.get("bio"):
                 bio = self._random(self.bios)
                 if bio:
@@ -93,11 +95,10 @@ class Humaniser:
                     )
                     if not r.ok:
                         if r.status_code == 401:
-                            raise "Token Invalid"
+                            raise RuntimeError("Token Invalid")
                         self.logger.log(f"Failed to update Bio -> {self._discord_error(r)}")
                         return 
                     self.logger.log(f"Updated Bio -> {NexusColor.GREEN}{bio}")
-                    time.sleep(1)
 
             if self.config.get("pronouns"):
                 pronouns = self._random(self.pronouns)
@@ -108,11 +109,10 @@ class Humaniser:
                     )
                     if not r.ok:
                         if r.status_code == 401:
-                             raise "Token Invalid"
+                             raise RuntimeError("Token Invalid")
                         self.logger.log(f"Failed to update Pronouns -> {self._discord_error(r)}")
                         return 
                     self.logger.log(f"Updated Pronouns -> {NexusColor.GREEN}{pronouns}")
-                    time.sleep(1)
 
             if self.config.get("display_name"):
                 name = self._random(self.names)
@@ -123,11 +123,10 @@ class Humaniser:
                     )
                     if not r.ok:
                         if r.status_code == 401:
-                            raise "Token Invalid"
+                            raise RuntimeError("Token Invalid")
                         self.logger.log(f"Failed to update Display Name -> {self._discord_error(r)}")
                         return
                     self.logger.log(f"Updated Name -> {NexusColor.GREEN}{name}")
-                    time.sleep(1)
 
             if self.config.get("avatar"):
                 avatar = self._random_avatar()
@@ -140,7 +139,7 @@ class Humaniser:
                         )
                         if not r.ok:
                             if r.status_code == 401:
-                                raise "Token Invalid"
+                                raise RuntimeError("Token Invalid")
                             self.logger.log(f"Failed to update Avatar -> {self._discord_error(r)}")
                             return 
                         self.logger.log(f"Updated Avatar -> {NexusColor.GREEN}{str(avatar)}")

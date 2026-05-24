@@ -1,6 +1,6 @@
+import ctypes
 import threading
 import time
-import os
 import sys
 from typing import Callable
 
@@ -45,8 +45,8 @@ class TitleBarUpdater:
 
     @staticmethod
     def _set_title(title: str) -> None:
-        if os.name == "nt":
-            os.system(f"title {title}")
+        if sys.platform == "win32":
+            ctypes.windll.kernel32.SetConsoleTitleW(title)
         else:
             sys.stdout.write(f"\33]0;{title}\a")
             sys.stdout.flush()

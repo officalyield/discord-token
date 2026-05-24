@@ -16,7 +16,7 @@ class HeaderBuilder:
         self._header_cache: dict = {}
         self._cookie_cache: dict = {}
 
-        self.chrome_version = 120
+        self.chrome_version = 148
         self.user_agent = (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
             "AppleWebKit/537.36 (KHTML, like Gecko) "
