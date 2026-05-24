@@ -20,9 +20,8 @@
 
 
 <p align="center">
-  <strong>💼 Available for custom development work</strong><br>
-  Automation • Tools • Discord Systems • Private Projects <br><br>
-  <a href="https://t.me/VatosV2" target="_blank"><b>DM me on Telegram</b></a>
+  <strong>🔐 Captcha solving by <a href="https://anysolver.com" target="_blank">Anysolver.com</a></strong><br>
+  <strong>🌐 Proxies: <a href="https://nodeproxies.xyz" target="_blank">NodeProxies.xyz</a></strong><br><br>
 </p>
 
 ---
@@ -31,14 +30,13 @@
 ![picture](github_assets/token-gen-screenshot.png)
 
 ## Features 
-- **`Broswer Based Hcaptcha Solving`** - Browser Based Hcaptcha Solving on own html file
+- **`Hcaptcha Solving`** - Solving Hcaptcha with anysolver.com
 - **`Verifying Discord Accounts`** - Verifies Discord Accounts By Mail API
 - **`Humanizing Discord Accounts`** - Humanizes Discord Tokens
 - **`Token Generation`** - Unlocked, High Quality Discord token
 
 ## Tech Stack
 - Python
-- Javascript
 
 ## Contributers
 
