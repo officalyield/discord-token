@@ -3,6 +3,7 @@ import json
 import time
 import base64
 import uuid
+import random
 
 from platform import system, release
 
@@ -16,7 +17,7 @@ class HeaderBuilder:
         self._header_cache: dict = {}
         self._cookie_cache: dict = {}
 
-        self.chrome_version = 148
+        self.chrome_version = random.randint(138, 148)
         self.user_agent = (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
             "AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -30,17 +31,17 @@ class HeaderBuilder:
             "browser": "Chrome",
             "device": "",
             "system_locale": "en-US",
+            "has_client_mods": False,
             "browser_user_agent": self.user_agent,
             "browser_version": f"{self.chrome_version}.0.0.0",
             "os_version": release(),
-            "referrer": "https://discord.com/",
-            "referring_domain": "discord.com",
+            "referrer": "",
+            "referring_domain": "",
             "referrer_current": "",
             "referring_domain_current": "",
             "release_channel": "stable",
             "client_build_number": DiscordUtils.get_web(),
             "client_event_source": None,
-            "has_client_mods": False,
             "client_launch_id": str(uuid.uuid4()),
             "launch_signature": str(uuid.uuid4()),
             "client_heartbeat_session_id": str(uuid.uuid4()),
@@ -105,7 +106,7 @@ class HeaderBuilder:
                 "accept-language": "en-US,en;q=0.9",
                 "content-type": "application/json",
                 "origin": "https://discord.com",
-                "referer": "https://discord.com/",
+                "referer": "https://discord.com/register",
                 "priority": "u=1, i",
                 "sec-ch-ua": (
                     f'"Google Chrome";v="{self.chrome_version}", '
@@ -124,9 +125,6 @@ class HeaderBuilder:
                 "x-fingerprint": fp,
                 "x-super-properties": self._super_properties(),
             }
-
-            if context:
-                headers["x-context-properties"] = self._context_properties(context)
 
             self._header_cache[cache_key] = {
                 "headers": headers.copy(),

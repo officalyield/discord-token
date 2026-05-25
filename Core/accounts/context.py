@@ -76,6 +76,13 @@ class TitleBarStats:
         elapsed_seconds = max(time() - self.start_time, 1)
         elapsed_minutes = elapsed_seconds / 60
         return round(self.token_generated / elapsed_minutes, 2)
+    
+    @property
+    def unlock_rate(self) -> float:
+        total = self.token_generated + self.invalid_tokens + self.locked_tokens
+        if total == 0:
+            return 0.0
+        return round(self.token_generated / total * 100, 2)
 
 
 
@@ -93,5 +100,6 @@ class TitleBarStats:
             f"Inv: {self.invalid_tokens} │ "
             f"Lock: {self.locked_tokens} │ "
             f"CPM: {self.tokens_per_minute} │ "
+            f"Unlock: {self.unlock_rate}% │ "
             f"Time: {m:02}:{s:02}"
         )
