@@ -3,7 +3,7 @@
     "captcha_timeout": 100,
     "solver": {
         "service": "anysolver",
-        "subservice": "Capless",
+        "subservice": "VoidSolver",
         "api_key": ""
     },
     "verification": {
