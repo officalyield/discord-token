@@ -14,7 +14,6 @@ class TokenGenerator:
         logger,
         config,
         mail_api,
-        phone_api,
         stats
     ):
         self.context_factory = context_factory
@@ -27,7 +26,6 @@ class TokenGenerator:
         self.logger = logger
         self.config = config
         self.mail_api = mail_api
-        self.phone_api = phone_api
         self.stats = stats
 
     def run(self):

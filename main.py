@@ -57,7 +57,6 @@ def worker(queue: Queue, proxy_provider, config, stats: TitleBarStats):
                 logger=logger,
                 config=config,
                 mail_api=mail_api,
-                phone_api=phone_api,
                 stats=stats,
             )
 

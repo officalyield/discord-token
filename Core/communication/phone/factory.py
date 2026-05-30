@@ -7,7 +7,8 @@ class PhoneApiFactory:
     
     def create(self):
         if not self.api_key:
-            raise ValueError("No API Key")
+            if self.config["verification"]["phone_verification"]:
+                raise ValueError("No API Key")
         
         if self.config["verification"]["phone_provider"] == "onlinesim":
             return OnlineSimApi(self.api_key)
