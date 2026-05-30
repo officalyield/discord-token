@@ -4,7 +4,7 @@ import threading                                                                
 class VatosLogger:
     
     def __init__(self, config):
-        self.LC = f"{NexusColor.PURPLE}[{NexusColor.LIGHTBLACK}VATOS{NexusColor.PURPLE}] "
+        self.LC = f"{NexusColor.MAIN_COLOR}[{NexusColor.LIGHTBLACK}t.me/cfvatos{NexusColor.MAIN_COLOR}] "
         self.config = config
         
     def log(self, msg: str) -> None:

@@ -41,7 +41,7 @@ class MailVerify:
             if 200 <= response.status_code < 300:
                 token = response.json().get("token")
                 self.stats.ev_tokens += 1
-                self.logger.log_token(f"Succsefully verified Mail -> {NexusColor.PURPLE}", token)
+                self.logger.log_token(f"Succsefully verified Mail -> {NexusColor.MAIN_COLOR}", token)
                 ctx.token = token
                 return
             

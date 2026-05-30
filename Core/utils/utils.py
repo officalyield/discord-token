@@ -13,11 +13,29 @@ class Utils:
 
     @staticmethod
     def random_string(length: int = 16) -> str:
-        allowed_chars = string.ascii_lowercase + string.digits + "_."
-        first_char = random.choice(string.ascii_lowercase + string.digits + "_")
-        middle = ''.join(random.choice(allowed_chars) for _ in range(max(length - 2, 0)))
-        last_char = random.choice(string.ascii_lowercase + string.digits + "_") if length > 1 else ""
-        return first_char + middle + last_char
+        if length <= 0:
+            return ""
+
+        first_chars = string.ascii_lowercase + string.digits + "_"
+        first_char = random.choice(first_chars)
+
+        if length == 1:
+            return first_char
+
+        middle_chars = first_chars + "."
+        middle = []
+        remaining = length - 2 
+
+        for _ in range(remaining):
+            if middle and middle[-1] == ".":
+                next_char = random.choice(first_chars)
+            else:
+                next_char = random.choice(middle_chars)
+            middle.append(next_char)
+
+        last_char = random.choice(first_chars)
+
+        return first_char + "".join(middle) + last_char
 
     @staticmethod
     def random_birthday():
@@ -42,3 +60,26 @@ class Utils:
 
         return proxy
     
+    @staticmethod
+    def has_fingerprints() -> bool:
+        try:
+            with open("io/input/fingerprints.txt", encoding="utf-8") as f:
+                return bool(f.read().strip())
+        except FileNotFoundError:
+            return False
+
+    @staticmethod
+    def get_fingerprint() -> str | None:
+        try:
+            with open("io/input/fingerprints.txt", encoding="utf-8") as f:
+                fps = [line.strip() for line in f if line.strip()]
+
+            if not fps:
+                return None
+
+            fp = fps.pop()
+
+            return fp
+
+        except FileNotFoundError:
+            return None

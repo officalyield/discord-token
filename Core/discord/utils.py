@@ -1,8 +1,11 @@
 import re
 import json
+import random
 
 from json import dumps, loads, JSONDecodeError
 from typing import Union, Dict, Tuple, Optional
+
+from faker import Faker
 
 import requests
 import websocket
@@ -111,3 +114,15 @@ class DiscordUtils:
             return {"status": "invalid"}
 
         return {"status": "invalid"}
+
+    @staticmethod
+    def _get_username(session) -> Optional[str]:
+        username = Faker().first_name() + "_" + Faker().last_name() + str(random.randint(1000, 9999))
+        r = session.post("https://discord.com/api/v9/unique-username/username-attempt-unauthed", json={"username": username})
+        if r.ok:
+            data = r.json()
+            if data["taken"]:
+                return DiscordUtils._get_username(session)
+            
+            return username
+        return DiscordUtils._get_username(session)

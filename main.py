@@ -14,6 +14,8 @@ from Core.discord.register import DiscordRegisterService
 from Core.discord.session import DiscordSessionFactory
 from Core.communication.mail.factory import MailApiFactory
 from Core.communication.mail.verify import MailVerify
+from Core.communication.phone.factory import PhoneApiFactory
+from Core.communication.phone.verify import PhoneVerification
 from Core.Flow.solver import Solver
 from Core.logging.logger import VATOS, VatosLogger
 from Core.utils.humaniser import Humaniser
@@ -41,18 +43,22 @@ def worker(queue: Queue, proxy_provider, config, stats: TitleBarStats):
             session = DiscordSessionFactory(proxy).create()
             logger = VatosLogger(config)
             mail_api = MailApiFactory(config).create()
-
+            phone_api = PhoneApiFactory(config).create()
+            storage = TokenStorage()
+            
             generator = TokenGenerator(
-                context_factory=AccountContextFactory(session, proxy, logger, mail_api),
-                register=DiscordRegisterService(session, logger, stats),
+                context_factory=AccountContextFactory(session, proxy, logger, mail_api, config),
+                register=DiscordRegisterService(session, logger, stats, config),
                 captcha=Solver(logger, config),
                 email_verifier=MailVerify(session, logger, stats),
-                storage=TokenStorage(),
+                phone_verifier=PhoneVerification(session, logger, stats, phone_api, Solver(logger, config)),
+                storage=storage,
                 humaniser=Humaniser(config, session, logger),
                 logger=logger,
                 config=config,
                 mail_api=mail_api,
-                stats=stats
+                phone_api=phone_api,
+                stats=stats,
             )
 
             generator.run()
@@ -65,7 +71,7 @@ def main():
     titlebar = TitleBarUpdater(stats.format_title, interval=0.1)
     titlebar.start()
 
-    print(f"""{NexusColor.PURPLE}
+    print(f"""{NexusColor.MAIN_COLOR}
             ██████╗ ██████╗ ██████╗ 
             ╚════██╗╚════██╗╚════██╗
             ▄███╔╝  ▄███╔╝  ▄███╔╝

@@ -1,6 +1,7 @@
 "Colors.py File for handeling converting colors and saving color variables."
 
 import re
+import random
 from typing import Tuple
 
 
@@ -56,6 +57,7 @@ class Color:
 
 
 class NexusColor:
+    COLOR_HEX_LIST = ["#0fafff", "#630fff", "#3b812a", "#9b6310"]
     RESET: str = "\033[0m"
     NEXUS: str = Color.hex_to_ansi("#cc00aa")
     RED: str = Color.hex_to_ansi("#ff001e")
@@ -63,4 +65,4 @@ class NexusColor:
     LIGHTBLACK: str = Color.hex_to_ansi("#5c5e5b")
     LIGHTBLUE: str = Color.hex_to_ansi("#03f8fc")
     YELLOW: str = Color.hex_to_ansi("#fcf803")
-    PURPLE: str = Color.hex_to_ansi("#7903ff")
+    MAIN_COLOR: str = Color.hex_to_ansi(random.choice(COLOR_HEX_LIST))

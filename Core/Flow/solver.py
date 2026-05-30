@@ -12,12 +12,12 @@ class Solver:
         self.api_base = "https://api.anysolver.com"
         self.api_key = self.config["solver"]["api_key"]
 
-    def start_solve(self, rqdata: str, proxy: str = None) -> str:
+    def start_solve(self, rqdata: str, proxy: str = None, website_url: str = None) -> str:
         payload = {
             "clientKey": self.api_key,
             "task": {
                 "type": "PopularCaptchaEnterpriseToken",
-                "websiteURL": "https://discord.com/register",
+                "websiteURL": website_url or "https://discord.com/register",
                 "websiteKey": "a9b5fb07-92ff-493f-86fe-352a2803b3df",
                 "proxy": proxy,
                 "rqdata": rqdata
@@ -78,9 +78,9 @@ class Solver:
 
                 self.logger.log(
                     f"Captcha Solved in "
-                    f"{NexusColor.PURPLE}{elapsed:.1f}s "
+                    f"{NexusColor.MAIN_COLOR}{elapsed:.1f}s "
                     f"{NexusColor.LIGHTBLACK}("
-                    f"{NexusColor.PURPLE}{display_token}"
+                    f"{NexusColor.MAIN_COLOR}{display_token}"
                     f"{NexusColor.LIGHTBLACK})"
                 )
 
@@ -98,7 +98,7 @@ class Solver:
 
             time.sleep(3)
 
-    def solve(self, ctx):
+    def solve(self, ctx, website_url: str = None):
         if not hasattr(ctx, "captcha_rqdata"):
             raise ValueError("Context missing captcha_rqdata")
 
@@ -108,7 +108,8 @@ class Solver:
 
         task_id = self.start_solve(
             rqdata=ctx.captcha_rqdata,
-            proxy=proxy
+            proxy=proxy,
+            website_url=website_url
         )
 
         result = self.wait_for_result(task_id)

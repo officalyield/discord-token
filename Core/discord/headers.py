@@ -5,7 +5,7 @@ import base64
 import uuid
 import random
 
-from platform import system, release
+from platform import system
 
 from typing import Optional
 
@@ -17,7 +17,7 @@ class HeaderBuilder:
         self._header_cache: dict = {}
         self._cookie_cache: dict = {}
 
-        self.chrome_version = random.randint(138, 148)
+        self.chrome_version = random.randint(145, 148)
         self.user_agent = (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
             "AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -25,7 +25,8 @@ class HeaderBuilder:
         )
 
 
-    def _super_properties(self) -> str:
+    def _super_properties(self, invite_code: Optional[str] = None) -> str:
+        # Imagine using Xbox One Device Spoof for no reason
         payload = {
             "os": system(),
             "browser": "Chrome",
@@ -34,11 +35,11 @@ class HeaderBuilder:
             "has_client_mods": False,
             "browser_user_agent": self.user_agent,
             "browser_version": f"{self.chrome_version}.0.0.0",
-            "os_version": release(),
-            "referrer": "",
+            "os_version": 10,
+            "referrer": "" if not invite_code else f"https://discord.com/invite/{invite_code}",
             "referring_domain": "",
-            "referrer_current": "",
-            "referring_domain_current": "",
+            "referrer_current": "https://discord.com/",
+            "referring_domain_current": "discord.com",
             "release_channel": "stable",
             "client_build_number": DiscordUtils.get_web(),
             "client_event_source": None,
@@ -81,15 +82,10 @@ class HeaderBuilder:
         except Exception:
             return ""
 
-
-    def _context_properties(self, location: str) -> str:
-        payload = {"location": location}
-        return base64.b64encode(json.dumps(payload).encode()).decode()
-
-
     def build(
         self,
         fp: str,
+        invite_code: Optional[str] = None,
         *,
         context: Optional[str] = None,
     ) -> dict[str, str]:
@@ -106,8 +102,8 @@ class HeaderBuilder:
                 "accept-language": "en-US,en;q=0.9",
                 "content-type": "application/json",
                 "origin": "https://discord.com",
-                "referer": "https://discord.com/register",
                 "priority": "u=1, i",
+                "referer": "https://discord.com/register" if not invite_code else f"https://discord.com/invite/{invite_code}",
                 "sec-ch-ua": (
                     f'"Google Chrome";v="{self.chrome_version}", '
                     f'"Chromium";v="{self.chrome_version}", '
@@ -123,7 +119,7 @@ class HeaderBuilder:
                 "x-discord-locale": "en-US",
                 "x-discord-timezone": "America/Los_Angeles",
                 "x-fingerprint": fp,
-                "x-super-properties": self._super_properties(),
+                "x-super-properties": self._super_properties(invite_code),
             }
 
             self._header_cache[cache_key] = {

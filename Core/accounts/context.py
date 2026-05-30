@@ -12,6 +12,8 @@ class AccountContext:
     email: str
     birthday: Tuple[int, int, int]
     proxy: str
+    phone_number: Optional[str] = None
+    tzid: Optional[str] = None
 
     captcha_key: Optional[str] = None
     token: Optional[str] = None
@@ -23,6 +25,8 @@ class TitleBarStats:
     ev_tokens: int = 0
     invalid_tokens: int = 0
     locked_tokens: int = 0
+    humanized: int = 0
+    pv_tokens: int = 0
     
     consecutive_failures: int = 0
     soft_flag_hits: int = 0
@@ -84,8 +88,6 @@ class TitleBarStats:
             return 0.0
         return round(self.token_generated / total * 100, 2)
 
-
-
     @property
     def time_elapsed(self) -> int:
         return int(time() - self.start_time)
@@ -97,9 +99,10 @@ class TitleBarStats:
             f"??? │ "
             f"Gen: {self.token_generated} │ "
             f"EV: {self.ev_tokens} │ "
-            f"Inv: {self.invalid_tokens} │ "
+            f"PV: {self.pv_tokens} │ "
+            f"INV: {self.invalid_tokens} │ "
             f"Lock: {self.locked_tokens} │ "
-            f"CPM: {self.tokens_per_minute} │ "
             f"Unlock: {self.unlock_rate}% │ "
+            f"CPM: {self.tokens_per_minute} │ "
             f"Time: {m:02}:{s:02}"
         )

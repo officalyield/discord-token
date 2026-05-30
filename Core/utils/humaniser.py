@@ -1,11 +1,10 @@
 import io
 import random
-import time
 
 from base64 import b64encode
 from pathlib import Path
 from typing import Optional, List
-
+from faker import Faker
 from PIL import Image
 
 from Core.discord.utils import DiscordUtils

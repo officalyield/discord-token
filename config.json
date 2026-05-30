@@ -1,24 +1,34 @@
 {
-    "threads": 1,
-    "captcha_timeout": 100,
+    "generator": {
+        "thread_count": 1,
+        "invite": "",
+        "custom_fingerprints": false
+    },
     "solver": {
         "service": "anysolver",
-        "subservice": "Capless",
-        "api_key": ""
+        "subservice": "VoidSolver",
+        "api_key": "",
+        "captcha_timeout": 120
     },
     "verification": {
+        "mail_verification": true,
         "mail_provider": "cybertemp",
-        "mail_api_key": ""
+        "mail_api_key": "",
+        "phone_verification": false,
+        "phone_provider": "onlinesim",
+        "phone_api_key": "",
+        "country_code": 212
     },
     "humanizer": {
-        "enabled": true,
+        "enabled": false,
         "avatar": true,
         "pronouns": true,
         "bio": true,
-        "display_name": true
-    },
+        "display_name": true,
+        "username": true
+        },
     "logs": {
-        "censor_token": true
+        "censor_token": false
     }
 
 }

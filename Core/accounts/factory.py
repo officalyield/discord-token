@@ -5,30 +5,42 @@ from Core.discord.headers import HeaderBuilder
 from Core.NexusColors.color import NexusColor
 
 class AccountContextFactory:
-    def __init__(self, session, proxy, logger, mail_api):
+    def __init__(self, session, proxy, logger, mail_api, config):
         self.session = session
         self.proxy = proxy
         self.logger = logger
         self.mail_api = mail_api
+        self.config = config
 
     def create(self) -> AccountContext:
         dcfduid, sdcfduid = DiscordUtils.fetch_cookies(self.session)
-        fingerprint = DiscordUtils.get_fingerprint(
-            dcfduid, sdcfduid, self.session
+        fingerprint = (
+            Utils.get_fingerprint()
+            if self.config["generator"]["custom_fingerprints"] and Utils.has_fingerprints()
+            else DiscordUtils.get_fingerprint(dcfduid, sdcfduid, self.session)
         )
-
-        username = Utils.random_string()
-        self.logger.log(f"Got Username -> {NexusColor.PURPLE}{username}")
+        
+        mail_string = Utils.random_string()
+        username = DiscordUtils._get_username(self.session) if self.config["humanizer"]["enabled"] and self.config["humanizer"]["username"] else mail_string
         password = Utils.random_password()
-        self.logger.log(f"Got Password -> {NexusColor.PURPLE}{password}")
-        email = self.mail_api.create_account(username, password)
-        self.logger.log(f"Got Mail -> {NexusColor.PURPLE}{email}")
+        
+        email = self.mail_api.create_account(mail_string, password)
+        invite = self.config["generator"].get("invite", None)
+        
         birthday = Utils.random_birthday()
         y, m, d = birthday
-        self.logger.log(f"Got Birthday -> {NexusColor.PURPLE}{f'{y}-{m:02d}-{d:02d}'}")
-        
 
-        headers = HeaderBuilder(self.session).build(fp=fingerprint)
+        self.logger.log(
+            f"Got Account Context -> "
+            f"{NexusColor.MAIN_COLOR}{email}:{password}{NexusColor.LIGHTBLACK} | "
+            f"{NexusColor.MAIN_COLOR}{y}-{m:02d}-{d:02d}{NexusColor.LIGHTBLACK} | "
+            f"{NexusColor.MAIN_COLOR}{fingerprint[:12]}{NexusColor.LIGHTBLACK}"
+            f"{f' | {NexusColor.MAIN_COLOR}{invite}' if invite else ''}"
+            f"{NexusColor.RESET}"
+        )
+        
+        
+        headers = HeaderBuilder(self.session).build(fp=fingerprint, invite_code=invite)
         self.session.headers.update(headers)
 
         return AccountContext(

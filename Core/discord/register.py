@@ -3,10 +3,12 @@ from Core.NexusColors.color import NexusColor
 from Core.accounts.storage import TokenStorage
 
 class DiscordRegisterService:
-    def __init__(self, session, logger, stats):
+    def __init__(self, session, logger, stats, config):
         self.session = session
         self.logger = logger
         self.stats = stats
+        self.config = config
+        self.storage = TokenStorage()
 
     def start(self, ctx):
         y, m, d = ctx.birthday
@@ -18,8 +20,9 @@ class DiscordRegisterService:
             "password": ctx.password,
             "date_of_birth": f"{y}-{m:02d}-{d:02d}",
             "consent": True,
+            "invite": self.config["generator"].get("invite", None)
         }
-
+        
         self.logger.log("Creating Account..")
         response = self.session.post(
             "https://discord.com/api/v9/auth/register",
@@ -50,6 +53,7 @@ class DiscordRegisterService:
             "password": ctx.password,
             "date_of_birth": f"{y}-{m:02d}-{d:02d}",
             "consent": True,
+            "invite": self.config["generator"].get("invite", None)
         }
 
         response = self.session.post(
@@ -57,6 +61,12 @@ class DiscordRegisterService:
             json=payload,
         )
         if not response.ok:
+            if "captcha-required" in response.text:
+                raise RuntimeError(f'Register failed: ["captcha-required"]')
+                
+            if "invalid-response" in response.text:
+                raise RuntimeError(f'Register failed: :["invalid-response"]')
+                
             raise RuntimeError(f"Register failed: {response.text}")
         
         data = response.json()
@@ -79,7 +89,6 @@ class DiscordRegisterService:
             
         if token_status == "locked":
             self.stats.mark_locked()
-        
             
-        TokenStorage().save(ctx=ctx, file=f"{token_status}.txt")
+        self.storage.save(ctx, token_status)
         raise RuntimeError(f"{token_status} Token")
