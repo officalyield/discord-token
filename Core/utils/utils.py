@@ -1,8 +1,16 @@
 import random
 import string
+import threading
+import time
+import sys
+import ctypes
 
-from typing import Tuple
+from threading import Lock
+from typing import Callable
 
+from Core.NexusColors.color import NexusColor
+
+VATOS = threading.Semaphore(28)
 
 class Utils:
 
@@ -83,3 +91,104 @@ class Utils:
 
         except FileNotFoundError:
             return None
+        
+
+class TitleBarUpdater:
+    def __init__(self, stats_provider: Callable[[], str], interval: float = 0.5):
+        self.stats_provider = stats_provider
+        self.interval = interval
+
+        self._thread = None
+        self._stop_event = threading.Event()
+        self._lock = threading.Lock()
+
+    def start(self) -> None:
+        with self._lock:
+            if self._thread and self._thread.is_alive():
+                return
+
+            self._stop_event.clear()
+            self._thread = threading.Thread(
+                target=self._run,
+                name="TitleBarUpdater",
+                daemon=True
+            )
+            self._thread.start()
+
+    def stop(self) -> None:
+        self._stop_event.set()
+        if self._thread:
+            self._thread.join(timeout=1)
+
+    def _run(self) -> None:
+        while not self._stop_event.is_set():
+            try:
+                title = self.stats_provider()
+                if title:
+                    self._set_title(title)
+            except Exception:
+                pass
+
+            time.sleep(self.interval)
+
+    @staticmethod
+    def _set_title(title: str) -> None:
+        if sys.platform == "win32":
+            ctypes.windll.kernel32.SetConsoleTitleW(title)
+        else:
+            sys.stdout.write(f"\33]0;{title}\a")
+            sys.stdout.flush()
+
+class VatosLogger:
+    
+    def __init__(self, config):
+        self.LC = f"{NexusColor.MAIN_COLOR}[{NexusColor.LIGHTBLACK}t.me/cfvatos{NexusColor.MAIN_COLOR}] "
+        self.config = config
+        
+    def log(self, msg: str) -> None:
+        print(self.LC + NexusColor.LIGHTBLACK + msg)
+
+    def log_token(self, msg: str, token: str) -> None:
+        if self.config["logs"]["censor_token"]:
+            parts = token.split(".")
+
+            if len(parts) == 3:
+                part1, part2, part3 = parts
+
+                censored_part1 = part1[:6] + "******"
+                censored_part3 = "*******" + part3[-6:]
+
+                token = f"{censored_part1}.{part2}.{censored_part3}"
+    
+        print(self.LC + NexusColor.LIGHTBLACK + msg + token)
+        
+
+class ProxyProvider:
+    def __init__(self, file: str):
+        self.file = file
+        self.lock = Lock()
+
+    def get(self) -> str | None:
+        with self.lock:
+            try:
+                with open(self.file, "r+", encoding="utf-8") as f:
+                    proxies = [p.strip() for p in f if p.strip()]
+
+                    if not proxies:
+                        return None
+
+                    proxy = proxies.pop(0)
+
+                    f.seek(0)
+                    f.truncate()
+                    f.write("\n".join(proxies))
+
+                    return proxy
+            except FileNotFoundError:
+                return None
+
+class TokenStorage:
+    def save(self, ctx, file: str):
+        with open(f"io/output/{file}.txt", "a", encoding="utf-8") as f:
+            f.write(f"{ctx.email}:{ctx.password}:{ctx.token}\n")
+            

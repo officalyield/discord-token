@@ -1,6 +1,6 @@
 from Core.discord.utils import DiscordUtils
 from Core.NexusColors.color import NexusColor
-from Core.accounts.storage import TokenStorage
+from Core.utils.utils import TokenStorage
 
 class DiscordRegisterService:
     def __init__(self, session, logger, stats, config):

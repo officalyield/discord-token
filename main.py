@@ -5,19 +5,16 @@ import threading
 from queue import Queue
 
 from Core.Flow.generator import TokenGenerator
-from Core.Network.proxy import ProxyProvider
 from Core.accounts.factory import AccountContextFactory
-from Core.accounts.storage import TokenStorage
 from Core.accounts.context import TitleBarStats
-from Core.utils.titlebar import TitleBarUpdater
+from Core.utils.utils import TitleBarUpdater, VATOS, VatosLogger, ProxyProvider, TokenStorage
 from Core.discord.register import DiscordRegisterService
-from Core.discord.session import DiscordSessionFactory
+from Core.discord.utils import DiscordSessionFactory
 from Core.communication.mail.factory import MailApiFactory
 from Core.communication.mail.verify import MailVerify
 from Core.communication.phone.factory import PhoneApiFactory
 from Core.communication.phone.verify import PhoneVerification
 from Core.Flow.solver import Solver
-from Core.logging.logger import VATOS, VatosLogger
 from Core.utils.humaniser import Humaniser
 from Core.NexusColors.color import NexusColor 
 
