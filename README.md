@@ -70,7 +70,7 @@
 |---------|---------|-------------|
 | **Anysolver** | [anysolver.com](https://anysolver.com) | Advanced CAPTCHA solving |
 | **OnlineSim** | [onlinesim.io](https://onlinesim.io) | Virtual phone numbers for SMS verification |
-
+| **Cf-Group** | [Join Telegram Channel](https://t.me/cfvatos) | Join the Telegram channel to support this project |
 ---
 
 ## 👥 Contributors
