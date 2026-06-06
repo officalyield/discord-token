@@ -56,9 +56,11 @@
 
 > **Note:** Performance may vary based on location and use case. Test before committing.
 
+> **Promotion** 10% off for your first 10GB with nodeproxies when using the code `VATOSMOGS`
+
 | Rank | Provider | Speed | Stability | Price | Best For |
 |:--:|:---|:---:|:---:|:---:|:---|
-| 🥇 | **[NodeProxies](https://nodeproxies.xyz/)** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | $ | Fast Residental proxies best success rates |
+| 🥇 | **[NodeProxies](https://nodeproxies.xyz/register?ref=4259899A)** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | $ | Fast Residental proxies best success rates |
 | 🥈 | **[VitalProxies](https://www.vital-proxies.com/?ref=7kglreh2)** | ⭐⭐⭐⭐☆ | ⭐⭐⭐⭐⭐ | $$$ | Reliable proxies for a higher price |
 | 🥉 | **[VaultProxies](https://vaultproxies.net/?r=ydu2zjodr6bcilsa)** | ⭐⭐⭐⭐☆ | ⭐⭐⭐☆☆ | $ | Budget-friendly resi proxies for high volume |
 
