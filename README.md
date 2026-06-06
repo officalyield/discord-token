@@ -91,7 +91,7 @@ We partner with the most reliable infrastructure providers in the automation spa
 Nexus is built and maintained by a dedicated core team.
 
 * **`VatosV2`** — Head Developer & Lead Architect
-* **`zkamo`** — Core Contributor & Systems Optimization
+* **`zkamo`** — Hes just here
 
 ---
 
