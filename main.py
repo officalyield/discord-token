@@ -27,16 +27,8 @@ def worker(queue: Queue, proxy_provider, config, stats: TitleBarStats):
             continue
         
         with VATOS:                           
-
-            with proxy_lock:
-                proxy = proxy_provider.get()
-
-            if not proxy:
-                print("No proxies available")
-                queue.task_done()
-                continue
-
-            session = DiscordSessionFactory(proxy).create()
+            proxy = None
+            session = DiscordSessionFactory().create()
             logger = VatosLogger(config)
             mail_api = MailApiFactory(config).create()
             phone_api = PhoneApiFactory(config).create()
@@ -75,7 +67,7 @@ def main():
             ╚═╝     ╚═╝     ╚═╝ 
             """)
 
-    proxy_provider = ProxyProvider("io/input/proxies.txt")
+    proxy_provider = None
     threads_count = int(config.get("generator", {}).get("thread_count", 5))
     
     queue = Queue()

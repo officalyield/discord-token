@@ -8,111 +8,69 @@ class Solver:
     def __init__(self, logger, config):
         self.logger = logger
         self.config = config
-
-        self.api_base = "https://api.anysolver.com"
         self.api_key = self.config["solver"]["api_key"]
-
-    def start_solve(self, rqdata: str, proxy: str = None, website_url: str = None) -> str:
-        payload = {
-            "clientKey": self.api_key,
-            "task": {
-                "type": "PopularCaptchaEnterpriseToken",
-                "websiteURL": website_url or "https://discord.com/register",
-                "websiteKey": "a9b5fb07-92ff-493f-86fe-352a2803b3df",
-                "proxy": proxy,
-                "rqdata": rqdata
-            },
-            "provider": self.config["solver"]["subservice"],
-        }
-
-        r = requests.post(
-            f"{self.api_base}/createTask",
-            json=payload,
-            headers={
-                "Content-Type": "application/json"
-            },
-            timeout=30
-        )
-
-        data = r.json()
-
-        if data.get("errorId") != 0:
-            raise RuntimeError(
-                f"{data.get('errorCode')}: "
-                f"{data.get('errorDescription')}"
-            )
-
-        return data["taskId"]
-
-    def wait_for_result(self, task_id: str, timeout: int = 120):
-        if isinstance(self.config, dict):
-            timeout = self.config.get("captcha_timeout", timeout)
-
-        start = time.time()
-
-        time.sleep(4)
-
-        while True:
-            r = requests.post(
-                f"{self.api_base}/getTaskResult",
-                json={
-                    "clientKey": self.api_key,
-                    "taskId": task_id
-                },
-                headers={
-                    "Content-Type": "application/json"
-                },
-                timeout=30
-            )
-
-            data = r.json()
-
-            status = data.get("status")
-
-            if status == "ready":
-                elapsed = time.time() - start
-
-                token = data["solution"]["token"]
-
-                display_token = token[:32] + "..."
-
-                self.logger.log(
-                    f"Captcha Solved in "
-                    f"{NexusColor.MAIN_COLOR}{elapsed:.1f}s "
-                    f"{NexusColor.LIGHTBLACK}("
-                    f"{NexusColor.MAIN_COLOR}{display_token}"
-                    f"{NexusColor.LIGHTBLACK})"
-                )
-
-                return data
-
-            if status == "failed":
-                raise RuntimeError(
-                    f"Captcha solve failed: "
-                    f"{data.get('errorCode')} - "
-                    f"{data.get('errorDescription')}"
-                )
-
-            if time.time() - start > timeout:
-                raise TimeoutError("Captcha solve timed out")
-
-            time.sleep(3)
 
     def solve(self, ctx, website_url: str = None):
         if not hasattr(ctx, "captcha_rqdata"):
             raise ValueError("Context missing captcha_rqdata")
 
-        self.logger.log("Solving Captcha...")
+        self.logger.log("Solving Captcha via NopeCHA...")
+        start = time.time()
 
-        proxy = getattr(ctx, "proxy", None)
+        payload = {
+            "key": self.api_key,
+            "type": "hcaptcha",
+            "sitekey": "a9b5fb07-92ff-493f-86fe-352a2803b3df",
+            "url": website_url or "https://discord.com/register",
+            "data": {
+                "rqdata": ctx.captcha_rqdata
+            }
+        }
 
-        task_id = self.start_solve(
-            rqdata=ctx.captcha_rqdata,
-            proxy=proxy,
-            website_url=website_url
-        )
+        try:
+            # Step 1: Submit Task
+            r = requests.post("https://api.nopecha.com/token/", json=payload, timeout=30)
+            data = r.json()
 
-        result = self.wait_for_result(task_id)
+            if "data" not in data:
+                error_msg = data.get("message", "Unknown error")
+                raise RuntimeError(f"NopeCHA task creation failed: {error_msg}")
 
-        if result:
-            ctx.captcha_key = result["solution"]["token"]
+            task_id = data["data"]
+
+            # Step 2: Poll for Result
+            timeout = self.config.get("solver", {}).get("captcha_timeout", 120)
+            while time.time() - start < timeout:
+                r = requests.get(
+                    "https://api.nopecha.com/token/",
+                    params={"key": self.api_key, "id": task_id},
+                    timeout=30
+                )
+                res_data = r.json()
+
+                if "data" in res_data:
+                    token = res_data["data"]
+                    elapsed = time.time() - start
+                    display_token = token[:32] + "..."
+
+                    self.logger.log(
+                        f"Captcha Solved in "
+                        f"{NexusColor.MAIN_COLOR}{elapsed:.1f}s "
+                        f"{NexusColor.LIGHTBLACK}("
+                        f"{NexusColor.MAIN_COLOR}{display_token}"
+                        f"{NexusColor.LIGHTBLACK})"
+                    )
+                    ctx.captcha_key = token
+                    return
+                
+                if res_data.get("error") == 14: # Incomplete job
+                    time.sleep(3)
+                    continue
+                
+                error_msg = res_data.get("message", "Unknown error during polling")
+                raise RuntimeError(f"NopeCHA polling failed: {error_msg}")
+
+            raise TimeoutError("NopeCHA solve timed out")
+
+        except Exception as e:
+            raise RuntimeError(f"NopeCHA process failed: {e}")

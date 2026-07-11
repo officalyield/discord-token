@@ -12,18 +12,11 @@ from requests import RequestException
 
 
 class DiscordSessionFactory:
-    def __init__(self, proxy: str | None):
-        self.proxy = proxy
+    def __init__(self, proxy: str | None = None):
+        self.proxy = None
 
     def create(self):
         session = curl_cffi.Session(impersonate="chrome146")
-
-        if self.proxy:
-            session.proxies = {
-                "http": f"http://{self.proxy}",
-                "https": f"http://{self.proxy}",
-            }
-
         return session
 
 class DiscordUtils:

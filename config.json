@@ -1,19 +1,18 @@
 {
     "generator": {
-        "thread_count": 1,
+        "thread_count": 4,
         "invite": "",
         "custom_fingerprints": false
     },
     "solver": {
-        "service": "anysolver",
-        "subservice": "VoidSolver",
-        "api_key": "",
+        "service": "nopecha",
+        "api_key": "byb3xd9h81ho8obr",
         "captcha_timeout": 120
     },
     "verification": {
         "mail_verification": true,
         "mail_provider": "cybertemp",
-        "mail_api_key": "",
+        "mail_api_key": "tk_debfe3ddc5af1d20d5a3a00ab4311977c4d34b90ee2bdd038a80e2da7db8cd67",
         "phone_verification": false,
         "phone_provider": "onlinesim",
         "phone_api_key": "",

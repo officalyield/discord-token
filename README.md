@@ -9,14 +9,14 @@
 <p align="center">
   <strong>The Most Advanced Discord Token Generator</strong>
   <br />
-  Powered by <a href="https://anysolver.com">Anysolver.com</a>
+  Powered by <a href="https://nopecha.com">NopeCHA.com</a>
 </p>
 
 <p align="center">
   <a href="#-features">Features</a> •
   <a href="#-preview">Preview</a> •
-  <a href="#-proxy-benchmarks">Proxy Benchmarks</a> 
-  <a href="https://t.me/cfvatos">Telegram Support</a>
+  <a href="https://t.me/cfvatos">Telegram Support</a> •
+  <a href="https://discord.gg/AEAsvKQp">Discord Support</a>
 </p>
 
 <p align="center">
@@ -39,38 +39,12 @@
 
 ## ✨ Features
 
-* 🛡️ Automated **HCaptcha Solving** via [Anysolver](https://anysolver.com)
+* 🛡️ Automated **HCaptcha Solving** via [NopeCHA](https://nopecha.com)
 * ✉️ Full **Email Verification** via [Cybertemp](https://cybertemp.xyz)
 * 📱 **Phone Verification** via API
 * 🎭 Advanced **Account Humanization**
 * 🌐 Custom **Browser Fingerprints**
 * 🚀 Auto-Join **Server Invites**
-
----
-
-## 🔌 Featured Sponsor
-
-<p align="center">
-  <a href="https://nodeproxies.xyz/register?ref=4259899A">
-    <img src="https://nodeproxies.xyz/standard.gif" alt="NodeProxies Banner" width="100%" style="border-radius: 6px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-  </a>
-</p>
-
-> 🎁 **Exclusive Deal:** Get **10% OFF** your first 10GB with NodeProxies using coupon code:  
-> **`VATOSMOGS`** — [Claim your discount here](https://nodeproxies.xyz/register?ref=4259899A).
-
----
-
-## 🌐 Proxy Benchmarks
-
-> [!NOTE]  
-> Performance, unlock rates, and speed may vary based on your geographic location and active threads. Always run a small test batch before scaling up.
-
-| Rank | Provider | Speed | Stability | Price | Ideal Use Case |
-| :---: | :--- | :---: | :---: | :---: | :--- |
-| 🥇 | **[NodeProxies](https://nodeproxies.xyz/register?ref=4259899A)** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | `$` | **Best Choice:** Ultra-fast residential pool, highest success rates |
-| 🥈 | **[VitalProxies](https://www.vital-proxies.com/?ref=7kglreh2)** | ⭐⭐⭐⭐☆ | ⭐⭐⭐⭐⭐ | `$$$` | High-reliability, premium infrastructure for critical tasks |
-| 🥉 | **[VaultProxies](https://vaultproxies.net/?r=ydu2zjodr6bcilsa)** | ⭐⭐⭐⭐☆ | ⭐⭐⭐☆☆ | `$` | Cost-effective residential proxies tailored for high-volume loads |
 
 ---
 
@@ -80,7 +54,7 @@ We partner with the most reliable infrastructure providers in the automation spa
 
 | Service | Protocol / Type | Role in Ecosystem |
 | :--- | :--- | :--- |
-| **[Anysolver](https://anysolver.com)** | Captcha API | Handles complex CAPTCHA and anti-bot verification challenges |
+| **[NopeCHA](https://nopecha.com)** | Captcha API | Handles complex CAPTCHA and anti-bot verification challenges |
 | **[OnlineSim](https://onlinesim.io)** | SMS API | Provisions virtual phone numbers for instant SMS bypassing |
 | **[Cf-Group](https://t.me/cfvatos)** | Community | Join our official Telegram channel for updates and changelogs |
 
@@ -90,8 +64,9 @@ We partner with the most reliable infrastructure providers in the automation spa
 
 Nexus is built and maintained by a dedicated core team.
 
-* **`VatosV2`** — Head Developer & Lead Architect
-* **`zkamo`** — Hes just here
+* **`potato.dev`** — Head Developer & Lead Architect
+* **`Vatos2`** — Give me origin source
+* **`xongback`** — Hes just here 💩
 
 ---
 
