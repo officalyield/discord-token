@@ -1,10 +1,8 @@
 <p align="center">
-  <a href="https://github.com/cf-vatos/token-gen">
-    <img src="github_assets/nexuspng.ico" width="120" height="120" alt="Nexus Token Gen Logo">
   </a>
 </p>
 
-<h1 align="center">Nexus Token Gen</h1>
+<h1 align="center">Discord Token Gen</h1>
 
 <p align="center">
   <strong>The Most Advanced Discord Token Generator</strong>
@@ -15,19 +13,9 @@
 <p align="center">
   <a href="#-features">Features</a> •
   <a href="#-preview">Preview</a> •
-  <a href="https://t.me/cfvatos">Telegram Support</a> •
   <a href="https://discord.gg/AEAsvKQp">Discord Support</a>
 </p>
-
-<p align="center">
-  <a href="https://github.com/cf-vatos/token-gen/stargazers">
-    <img src="https://img.shields.io/github/stars/vatosv2/token-gen?style=for-the-badge&logo=github&color=darkgreen" alt="GitHub Stars">
-  </a>
-  <img src="https://img.shields.io/badge/License-Unlicense-blue?style=for-the-badge" alt="License">
-  <img src="https://img.shields.io/badge/Maintained%3F-yes-green?style=for-the-badge" alt="Maintained">
-</p>
-
----
+  
 
 ## 📸 Preview
 
@@ -41,7 +29,7 @@
 
 * 🛡️ Automated **HCaptcha Solving** via [NopeCHA](https://nopecha.com)
 * ✉️ Full **Email Verification** via [Cybertemp](https://cybertemp.xyz)
-* 📱 **Phone Verification** via API
+* 📱 **Phone Verification** via [OnlineM](https://onlinesim.io)
 * 🎭 Advanced **Account Humanization**
 * 🌐 Custom **Browser Fingerprints**
 * 🚀 Auto-Join **Server Invites**
@@ -55,8 +43,7 @@ We partner with the most reliable infrastructure providers in the automation spa
 | Service | Protocol / Type | Role in Ecosystem |
 | :--- | :--- | :--- |
 | **[NopeCHA](https://nopecha.com)** | Captcha API | Handles complex CAPTCHA and anti-bot verification challenges |
-| **[OnlineSim](https://onlinesim.io)** | SMS API | Provisions virtual phone numbers for instant SMS bypassing |
-| **[Cf-Group](https://t.me/cfvatos)** | Community | Join our official Telegram channel for updates and changelogs |
+| **[OnlineSim](https://onlinesim.io)** | SMS API | Provisions virtual phone numbers for instant SMS bypassing ⭐️🌟⭐️ |
 
 ---
 
